@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <meta name="description" content="Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+">
+
+    <link rel="stylesheet" href="../lib/weui.min.css">
+    <link rel="stylesheet" href="../css/jquery-weui.css">
+    <link rel="stylesheet" href="css/demos.css">
+
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="dist/dropload.css">
+
+</head>
+
+<body ontouchstart>
+
+<div class="weui-tab">
+    <div id="scrollable_bd" class="weui-tab__bd">
+        <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+            <div class="tab">
+                <a href="javascript:;" class="item cur">租房</a>
+                <a href="javascript:;" class="item">招聘</a>
+            </div>
+            <div class="content">
+                <div class="lists"></div>
+                <div class="lists"></div>
+            </div>
+        </div>
+        <!--<div id="tab2" class="weui-tab__bd-item">
+            <h1>页面二</h1>
+        </div>
+        <div id="tab3" class="weui-tab__bd-item">
+            <h1>页面三</h1>
+        </div>-->
+        <div id="tab4" class="weui-tab__bd-item">
+            <div class="weui-btn-area">
+                <a class="weui-btn weui-btn_primary" href="javascript:" id="submit_btn">发布</a>
+            </div>
+            <!--<div class="weui-cells__title">表单</div>-->
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">名称</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="name" class="weui-input" type="text" placeholder="请输入名称">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">职位</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="position" class="weui-input" type="text" placeholder="请输入职位">
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__title">说明</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <textarea id="note" class="weui-textarea" placeholder="请输入职责、待遇等" rows="3"></textarea>
+                        <div class="weui-textarea-counter"><span>0</span>/200</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="weui-tabbar">
+        <a href="#tab1" class="weui-tabbar__item weui-bar__item--on">
+            <!--<span class="weui-badge" style="position: absolute;top: -.4em;right: 1em;">8</span>-->
+            <div class="weui-tabbar__icon">
+                <img src="./images/icon_nav_button.png" alt="">
+            </div>
+            <p class="weui-tabbar__label">大厅</p>
+        </a>
+        <!--<a href="#tab2" class="weui-tabbar__item">
+            <div class="weui-tabbar__icon">
+                <img src="./images/icon_nav_msg.png" alt="">
+            </div>
+            <p class="weui-tabbar__label">通讯录</p>
+        </a>
+        <a href="#tab3" class="weui-tabbar__item">
+            <div class="weui-tabbar__icon">
+                <img src="./images/icon_nav_article.png" alt="">
+            </div>
+            <p class="weui-tabbar__label">发现</p>
+        </a>-->
+        <a href="#tab4" class="weui-tabbar__item">
+            <div class="weui-tabbar__icon">
+                <img src="./images/icon_nav_cell.png" alt="">
+            </div>
+            <p class="weui-tabbar__label">发布</p>
+        </a>
+    </div>
+</div>
+
+<script src="../lib/jquery-2.1.4.js"></script>
+<script src="../lib/fastclick.js"></script>
+<script src="dist/dropload.min.js"></script>
+<script>
+    $(function () {
+        document.body.ontouchmove = function (e) {
+            e.preventDefault();
+        };
+        var startX = 0, startY = 0;
+        //touchstart事件
+        function touchSatrtFunc(evt) {
+            try
+            {
+                //evt.preventDefault(); //阻止触摸时浏览器的缩放、滚动条滚动等
+
+                var touch = evt.touches[0]; //获取第一个触点
+                var x = Number(touch.pageX); //页面触点X坐标
+                var y = Number(touch.pageY); //页面触点Y坐标
+                //记录触点初始位置
+                startX = x;
+                startY = y;
+
+            } catch (e) {
+                alert('touchSatrtFunc：' + e.message);
+            }
+        }
+        document.addEventListener('touchstart', touchSatrtFunc, false);
+        var _ss = document.getElementById("scrollable_bd");
+        _ss.ontouchmove = function (ev) {
+            var _point = ev.touches[0],
+                    _top = _ss.scrollTop;
+            // 什么时候到底部
+            var _bottomFaVal = _ss.scrollHeight - _ss.offsetHeight;
+            // 到达顶端
+            if (_top === 0) {
+                // 阻止向下滑动
+                if (_point.clientY > startY) {
+                    ev.preventDefault();
+                } else {
+                    // 阻止冒泡
+                    // 正常执行
+                    ev.stopPropagation();
+                }
+            } else if (_top === _bottomFaVal) {
+                // 到达底部
+                // 阻止向上滑动
+                if (_point.clientY < startY) {
+                    ev.preventDefault();
+                } else {
+                    // 阻止冒泡
+                    // 正常执行
+                    ev.stopPropagation();
+                }
+            } else if (_top > 0 && _top < _bottomFaVal) {
+                ev.stopPropagation();
+            } else {
+                ev.preventDefault();
+            }
+        };
+
+        /*var overscroll = function(el) {
+            el.addEventListener('touchstart', function() {
+                var top = el.scrollTop
+                        , totalScroll = el.scrollHeight
+                        , currentScroll = top + el.offsetHeight;
+                //If we're at the top or the bottom of the containers
+                //scroll, push up or down one pixel.
+                //
+                //this prevents the scroll from "passing through" to
+                //the body.
+                if(top === 0) {
+                    el.scrollTop = 1;
+                } else if(currentScroll === totalScroll) {
+                    el.scrollTop = top - 1;
+                }
+            });
+            el.addEventListener('touchmove', function(evt) {
+                //if the content is actually scrollable, i.e. the content is long enough
+                //that scrolling can occur
+                if(el.offsetHeight < el.scrollHeight)
+                    evt._isScroller = true;
+            });
+        }
+        overscroll(document.querySelector('.scroll'));
+        document.body.addEventListener('touchmove', function(evt) {
+            //In this case, the default behavior is scrolling the body, which
+            //would result in an overflow.  Since we don't want that, we preventDefault.
+            if(!evt._isScroller) {
+                evt.preventDefault();
+            }
+        });*/
+        /*$('body').on('touchmove',function (e) {
+            e.preventDefault();
+        })*/
+        FastClick.attach(document.body);
+    });
+</script>
+<script src="../js/jquery-weui.js"></script>
+
+<script>
+    $("#a").select({
+        title: "选择职业",
+        items: ["法官", "医生", "猎人", "学生", "记者", "其他"]
+    });
+    $('#submit_btn').click(function () {
+        /*$.confirm("您确定要发布?", "确认删除?", function() {
+            $.toast("文件已经删除!");
+        }, function() {
+            //取消操作
+        });*/
+        var name = $('#name').val();
+        var pos = $('#position').val();
+        var note = $('#note').val();
+        console.log("name",name);
+        if (name == "" || name.length == 0){
+            $.alert("不能为空哟！", "警告！");
+//            $('#name').focus();
+        }else{
+
+            $.toast("发布成功!");
+        }
+    })
+</script>
+
+<script>
+    $(function(){
+        var itemIndex = 0;
+        var tab1LoadEnd = false;
+        var tab2LoadEnd = false;
+        // tab
+        $('.tab .item').on('click',function(){
+            var $this = $(this);
+            itemIndex = $this.index();
+            $this.addClass('cur').siblings('.item').removeClass('cur');
+            $('.lists').eq(itemIndex).show().siblings('.lists').hide();
+
+            // 如果选中菜单一
+            if(itemIndex == '0'){
+                // 如果数据没有加载完
+                if(!tab1LoadEnd){
+                    // 解锁
+                    dropload.unlock();
+                    dropload.noData(false);
+                }else{
+                    // 锁定
+                    dropload.lock('down');
+                    dropload.noData();
+                }
+                // 如果选中菜单二
+            }else if(itemIndex == '1'){
+                if(!tab2LoadEnd){
+                    // 解锁
+                    dropload.unlock();
+                    dropload.noData(false);
+                }else{
+                    // 锁定
+                    dropload.lock('down');
+                    dropload.noData();
+                }
+            }
+            // 重置
+            dropload.resetload();
+        });
+
+        var counter = 0;
+        // 每页展示4个
+        var num = 4;
+        var pageStart = 0,pageEnd = 0;
+
+        // dropload
+        var dropload = $('.content').dropload({
+            scrollArea : window,
+            loadDownFn : function(me){
+                // 加载菜单一的数据
+                if(itemIndex == '0'){
+                    $.ajax({
+                        type: 'GET',
+                        url: 'json/jobs.json',
+                        dataType: 'json',
+                        success: function(data){
+                            var result = '';
+                            counter++;
+                            pageEnd = num * counter;
+                            pageStart = pageEnd - num;
+
+                            if(pageStart <= data.lists.length){
+                                for(var i = pageStart; i < pageEnd; i++){
+                                    result +=   '<a class="item opacity" href="'+data.lists[i].link+'">'
+                                            +'<img src="'+data.lists[i].pic+'" alt="">'
+                                            +'<h3>'+data.lists[i].title+'</h3>'
+                                            +'<span class="date">'+data.lists[i].date+'</span>'
+                                            +'</a>';
+                                    if((i + 1) >= data.lists.length){
+                                        // 数据加载完
+                                        tab1LoadEnd = true;
+                                        // 锁定
+                                        me.lock();
+                                        // 无数据
+                                        me.noData();
+                                        break;
+                                    }
+                                }
+                                // 为了测试，延迟1秒加载
+                                setTimeout(function(){
+                                    $('.lists').eq(0).append(result);
+                                    // 每次数据加载完，必须重置
+                                    me.resetload();
+                                },1000);
+                            }
+                        },
+                        error: function(xhr, type){
+                            alert('Ajax error!');
+                            // 即使加载出错，也得重置
+                            me.resetload();
+                        }
+                    });
+                    // 加载菜单二的数据
+                }else if(itemIndex == '1'){
+                    $.ajax({
+                        type: 'GET',
+                        url: 'json/jobs.json',
+                        dataType: 'json',
+                        success: function(data){
+                            var result = '';
+                            for(var i = 0; i < data.lists.length; i++){
+                                result +=   '<a class="item opacity" href="'+data.lists[i].link+'">'
+                                        +'<img src="'+data.lists[i].pic+'" alt="">'
+                                        +'<h3>'+data.lists[i].title+'</h3>'
+                                        +'<span class="date">'+data.lists[i].date+'</span>'
+                                        +'</a>';
+                            }
+                            // 为了测试，延迟1秒加载
+                            setTimeout(function(){
+                                $('.lists').eq(1).append(result);
+                                // 每次数据加载完，必须重置
+                                me.resetload();
+                            },1000);
+                        },
+                        error: function(xhr, type){
+                            alert('Ajax error!');
+                            // 即使加载出错，也得重置
+                            me.resetload();
+                        }
+                    });
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
