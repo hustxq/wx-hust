@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+    <title>效果测试</title>
+    <script language="javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.6.min.js"></script>
+    <script language="javascript" type="text/javascript">
+        $(document).ready(function () {
+//先弹出'单击了div',后弹出'单击了document'
+            $('div.c1').click(function (e) {
+                alert('单击了div');
+            });
+//只弹出'单击了div'
+            $('div.c2').click(function (e) {
+                alert('单击了div');
+                stopBubble(e);
+            });
+//单击body,弹出'单击了document'
+            $(document).click(function (e) {
+                alert('单击了document');
+            });
+            $('#txt1').val('123');
+//阻止冒泡弹出"单击了document"
+            $('#txt1').click(function (e) {
+                stopBubble(e);
+            });
+            $('#txt1').keydown(function (e) {
+                //取消默认按键事件
+                stopDefault(e);
+                alert('你按下了键值' + e.keyCode);
+            });
+        })
+
+        function stopBubble(e) {
+//如果提供了事件对象，则这是一个非IE浏览器
+            if (e && e.stopPropagation) {
+                //因此它支持W3C的stopPropagation()方法
+                e.stopPropagation();
+            } else {
+                //否则，我们需要使用IE的方式来取消事件冒泡
+                window.event.cancelBubble = true;
+            }
+        }
+        //阻止浏览器的默认行为
+        function stopDefault(e) {
+            //阻止默认浏览器动作(W3C)
+            if (e && e.preventDefault) {
+                e.preventDefault();
+                //IE中阻止函数器默认动作的方式
+            } else {
+                window.event.returnValue = false;
+                return false;
+            }
+        }
+    </script>
+    <style type="text/css">
+        body {
+            font-size: 14px;
+        }
+        .c1 {
+            font-family: "Arial Unicode MS"
+        }
+
+        .c2 {
+            font-family: helvetica, simsun, arial, clean
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="c1">测试的文字,这里是样式C1,单击以冒泡的形式触发事件.</div>
+<hr/>
+
+<div class="c2">测试的文字,这里是样式C2,单击以捕获的形式触发事件.</div>
+<hr/>
+
+<div><input id="txt1" name="Text1" type="text"/></div>
+<hr/>
+
+</body>
+</html>

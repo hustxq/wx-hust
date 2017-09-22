@@ -1,10 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-hi!
-</body>
-</html>
+<html lang="zh-CN"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="home_template">
+<div th:fragment="content" >
+    <div class="container">
+        <div class="weui-tab">
+            <div class="weui-tab__bd">
+                <div id="tab1" class="weui-tab__bd-item">
+                    <div class="tab">
+                        <a href="javascript:;" class="item cur">租房</a>
+                        <a href="javascript:;" class="item">招聘</a>
+                    </div>
+                    <div class="content">
+                        <div class="lists"></div>
+                        <div class="lists"></div>
+                    </div>
+                </div>
+                <div id="tab4" class="weui-tab__bd-item weui-tab__bd-item--active">
+                    <div class="weui-btn-area">
+                        <a class="weui-btn weui-btn_primary" href="javascript:" id="submit_btn">发布</a>
+                    </div>
+                    <!--<div class="weui-cells__title">表单</div>-->
+                    <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd"><label class="weui-label">名称</label></div>
+                            <div class="weui-cell__bd">
+                                <input id="name" class="weui-input" type="text" placeholder="请输入名称">
+                            </div>
+                        </div>
+                        <div class="weui-cell">
+                            <div class="weui-cell__hd"><label class="weui-label">职位</label></div>
+                            <div class="weui-cell__bd">
+                                <input id="position" class="weui-input" type="text" placeholder="请输入职位">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui-cells__title">说明</div>
+                    <div class="weui-cells weui-cells_form">
+                        <div class="weui-cell">
+                            <div class="weui-cell__bd">
+                                <textarea id="note" class="weui-textarea" placeholder="请输入职责、待遇等" rows="3"></textarea>
+                                <div class="weui-textarea-counter"><span>0</span>/200</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="weui-tabbar">
+                <a href="#tab1" class="weui-tabbar__item weui-bar__item--on">
+                    <!--<span class="weui-badge" style="position: absolute;top: -.4em;right: 1em;">8</span>-->
+                    <div class="weui-tabbar__icon">
+                        <img src="./images/icon_nav_button.png" alt="">
+                    </div>
+                    <p class="weui-tabbar__label">大厅</p>
+                </a>
+                <a href="#tab4" class="weui-tabbar__item">
+                    <div class="weui-tabbar__icon">
+                        <img src="./images/icon_nav_cell.png" alt="">
+                    </div>
+                    <p class="weui-tabbar__label">发布</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

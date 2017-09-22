@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>jQuery WeUI</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    <link rel="stylesheet" href="../lib/weui.min.css" th:href="@{/lib/weui.min.css}">
+    <link rel="stylesheet" href="../css/jquery-weui.css" th:href="@{/css/jquery-weui.min.css}">
+    <link rel="stylesheet" href="css/demos.css" th:href="@{/css/demos.css}">
+    <!--<style>
+        .weui-tab__bd-item.weui-pull-to-refresh{top:50px}
+    </style>-->
+</head>
+<body>
+<div class="weui-tab">
+    <div class="weui-navbar">
+        <div class="weui-navbar__item weui-navbar__item--on" href="#tab1">
+            大厅
+        </div>
+        <!--<div class="weui-navbar__item" href="#tab2">
+            选项二
+        </div>-->
+        <div class="weui-navbar__item" href="#tab3">
+            发布
+        </div>
+    </div>
+    <div class="weui-tab__bd">
+        <div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active weui-pull-to-refresh">
+            <div class="weui-pull-to-refresh__layer">
+                <div class='weui-pull-to-refresh__arrow'></div>
+                <div class='weui-pull-to-refresh__preloader'></div>
+                <div class="down">下拉刷新</div>
+                <div class="up">释放刷新</div>
+                <div class="refresh">正在刷新</div>
+            </div>
+            <div class="content-padded">
+                <div id="list" class="weui-cells">
+                </div>
+            </div>
+        </div>
+        <!--<div id="tab2" class="weui-tab__bd-item weui-pull-to-refresh">
+            <div class="weui-pull-to-refresh__layer">
+                <div class='weui-pull-to-refresh__arrow'></div>
+                <div class='weui-pull-to-refresh__preloader'></div>
+                <div class="down">下拉刷新</div>
+                <div class="up">释放刷新</div>
+                <div class="refresh">正在刷新</div>
+            </div>
+            <h1 class="doc-head">页面二</h1>
+            <div class="content-padded">
+                ...
+                <br>
+                ...
+            </div>
+        </div>-->
+        <div id="tab3" class="weui-tab__bd-item">
+            <div class="weui-btn-area">
+                <a class="weui-btn weui-btn_primary" href="javascript:" id="submit_btn">发布</a>
+            </div>
+            <!--<div class="weui-cells__title">表单</div>-->
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">名称</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="name" class="weui-input" type="text" placeholder="请输入名称">
+                    </div>
+                </div>
+                <div class="weui-cell">
+                    <div class="weui-cell__hd"><label class="weui-label">职位</label></div>
+                    <div class="weui-cell__bd">
+                        <input id="position" class="weui-input" type="text" placeholder="请输入职位">
+                    </div>
+                </div>
+            </div>
+            <div class="weui-cells__title">说明</div>
+            <div class="weui-cells weui-cells_form">
+                <div class="weui-cell">
+                    <div class="weui-cell__bd">
+                        <textarea id="note" class="weui-textarea" placeholder="请输入职责、待遇等" rows="3"></textarea>
+                        <div class="weui-textarea-counter"><span>0</span>/200</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../lib/jquery-2.1.4.js" th:src="@{/lib/jquery-2.1.4.js}"></script>
+<script src="../lib/fastclick.js" th:src="@{/lib/fastclick.js}"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+//        $('.weui-tab__bd-item.weui-pull-to-refresh').css('position','');
+    });
+</script>
+<script src="../js/jquery-weui.js" th:src="@{/js/jquery-weui.js}"></script>
+<script th:src="@{/js/list.js}"></script>
+<script th:src="@{/js/employ.js}"></script>
+<!--<script>
+    $('#tab1').pullToRefresh().on("pull-to-refresh", function () {
+        setTimeout(function () {
+//            $("#time").text(new Date);
+            $.alert(new Date());
+            $(document.body).pullToRefreshDone();
+        }, 2000);
+    });
+</script>-->
+</body>
+</html>

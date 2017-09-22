@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>hustxq</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="Write an awesome description for your new site here.
+    You can edit this line in _config.yml. It will appear in your document head meta
+    (for Google search results) and in your feed.xml site description.">
+    <link rel="shortcut icon" th:href="@{/img/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/lib/weui.min.css}">
+    <link rel="stylesheet" th:href="@{/css/jquery-weui.min.css}">
+    <link rel="stylesheet" th:href="@{/css/demos.css}">
+</head>
+<body ontouchstart>
+<div class="weui-btn-area">
+    <a class="weui-btn weui-btn_primary" href="javascript:" id="submit_btn">发布</a>
+</div>
+<!--<div class="weui-cells__title">表单</div>-->
+<div class="weui-cells weui-cells_form">
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">名称</label></div>
+        <div class="weui-cell__bd">
+            <input id="name" class="weui-input" type="text" placeholder="请输入名称">
+        </div>
+    </div>
+    <div class="weui-cell">
+        <div class="weui-cell__hd"><label class="weui-label">职位</label></div>
+        <div class="weui-cell__bd">
+            <input id="position" class="weui-input" type="text" placeholder="请输入职位">
+        </div>
+    </div>
+</div>
+<div class="weui-cells__title">说明</div>
+<div class="weui-cells weui-cells_form">
+    <div class="weui-cell">
+        <div class="weui-cell__bd">
+            <textarea id="note" class="weui-textarea" placeholder="请输入职责、待遇等" rows="3"></textarea>
+            <div class="weui-textarea-counter"><span>0</span>/200</div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/lib/jquery-2.1.4.js}"></script>
+<script th:src="@{/lib/fastclick.js}"></script>
+<script th:src="@{/js/jquery-weui.js}"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+//        进入时定位到name可输入
+        $('#name').focus();
+        $('#submit_btn').on('click', function () {
+            var name = $.trim($('#name').val());
+            var pos = $('#position').val();
+            var note = $('#note').val();
+            if (name.length == 0) {
+                $.alert("不能为空哟");
+            } else if (pos.length == 0) {
+                $.alert("不能为空哟");
+            } else if (note.length == 0) {
+                $.alert("不能为空哟");
+            } else {
+                $.confirm("", "确认发布", function () {
+//                    确认
+                    data = {
+                        name: name,
+                        pos: pos,
+                        note: note
+                    };
+                    console.log(data);
+                    $.ajax({
+                        url: '/employee',
+                        data: data,
+                        success: function (res) {
+                            console.log(res, res.result);
+                            $('#name').val("");
+                            $('#position').val("");
+                            $('#note').val("");
+                            $.toast(res.result);
+                        }
+                    })
+                }, function () {
+//                    取消
+                })
+
+            }
+        })
+    });
+    function myTrim(s) {
+        return s.replace(/^\s+|\s+$/gm, '');
+    }
+
+</script>
+</body>
+</html>

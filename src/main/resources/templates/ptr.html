@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>hustxq</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="Write an awesome description for your new site here.
+    You can edit this line in _config.yml. It will appear in your document head meta
+    (for Google search results) and in your feed.xml site description.">
+    <link rel="shortcut icon" th:href="@{/img/favicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/lib/weui.min.css}">
+    <link rel="stylesheet" th:href="@{/css/jquery-weui.min.css}">
+    <link rel="stylesheet" th:href="@{/css/demos.css}">
+    <style>
+        .h-list{
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body ontouchstart>
+<div class="weui-cells__title"><h1 class="h-list">带说明、跳转的列表项</h1></div>
+<div class="weui-cells__title"><h1 class="h-list">带说明、跳转的列表项</h1></div>
+<div id="fresh">
+    <div class="weui-pull-to-refresh__layer" id="fresh-tips">
+        <div class='weui-pull-to-refresh__arrow'></div>
+        <div class='weui-pull-to-refresh__preloader'></div>
+        <div class="down">下拉刷新</div>
+        <div class="up">释放刷新</div>
+        <div class="refresh">正在刷新</div>
+    </div>
+    <!--<h1 class="demos-title">下拉刷新</h1>
+    <p>Time: <span id="time">下拉我试试</span></p>-->
+    <div class='demos-content-padded'>
+        <div id="list" class="weui-cells">
+
+        </div>
+    </div>
+</div>
+<script th:src="@{/lib/jquery-2.1.4.js}"></script>
+<script th:src="@{/lib/fastclick.js}"></script>
+<script th:src="@{/js/jquery-weui.js}"></script>
+<script>
+    function refreshList(l) {
+        $('#list').empty();
+        for (var i = 0; i < l.length; i++) {
+            var tmp = l[i];
+            var mb = '<a class="weui-cell weui-cell_access" href="javascript:showNote(' + tmp.id + ');"><div class="weui-cell__bd"><p>' + tmp.name + '</p></div><div class="weui-cell__ft">' + tmp.pos + '</div></a>';
+            $('#list').append(mb);
+        }
+    }
+    function showNote(id) {
+        $.ajax({
+            url:"/employ-info/"+id,
+            success:function (res) {
+                $.alert(res.note);
+            }
+        })
+    }
+    $(function () {
+        var datetime;
+        var list = [];
+        $.ajax({
+            url: '/feedlist',
+            success: function (res) {
+                console.log(res);
+                for (var i = 0; i < res.length; i++) {
+                    var tmp = res[i];
+                    if (i == 0) {
+                        datetime = res[i].time;
+                    }
+                    list.push(tmp);
+                }
+                refreshList(list);
+            },
+            fail: function (error) {
+                console.log(error);
+            }
+        });
+//        var datetime =  new Date().Format("yyyy-MM-dd hh:mm:ss");
+//        var time = date.g
+        FastClick.attach(document.body);
+        $('#fresh-tips').hide();
+        $('#fresh').pullToRefresh().on('pull-to-refresh', function () {
+            console.log("ajax", datetime);
+            $('#fresh-tips').show;
+            $.ajax({
+                url: '/fresh-employ',
+                data: {
+                    time: datetime
+                },
+                success: function (res) {
+                    console.log(res);
+                    for (var i = res.length - 1; i >= 0; i--) {
+                        if (i == 0) {
+                            datetime = res[i].time;
+                        }
+                        list.unshift(res[i]);
+                    }
+                    refreshList(list);
+                    $('#fresh').pullToRefreshDone();
+                },
+                fail: function (error) {
+                    $.alert(error);
+                    $('#fresh').pullToRefreshDone();
+                }
+            })
+        })
+    });
+    // 对Date的扩展，将 Date 转化为指定格式的String
+    // 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，
+    // 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)
+    // 例子：
+    // (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423
+    // (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18
+    /*Date.prototype.Format = function(fmt)
+     { //author: meizz
+     var o = {
+     "M+" : this.getMonth()+1,                 //月份
+     "d+" : this.getDate(),                    //日
+     "h+" : this.getHours(),                   //小时
+     "m+" : this.getMinutes(),                 //分
+     "s+" : this.getSeconds(),                 //秒
+     "q+" : Math.floor((this.getMonth()+3)/3), //季度
+     "S"  : this.getMilliseconds()             //毫秒
+     };
+     if(/(y+)/.test(fmt))
+     fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+     for(var k in o)
+     if(new RegExp("("+ k +")").test(fmt))
+     fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+     return fmt;
+     }*/
+</script>
+</body>
+
+</html>
