@@ -15,7 +15,7 @@ import java.util.Map;
  * @Date 2017/9/20 16:41
  */
 @Controller
-@RequestMapping("/hust")
+//@RequestMapping("/hust")
 public class IndexController {
     @RequestMapping("")
     public String index(ModelMap map){
