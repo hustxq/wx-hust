@@ -2,15 +2,13 @@ package cn.hustxq.hust.controller;
 
 import cn.hustxq.hust.bean.EmployInfo;
 import cn.hustxq.hust.service.EmployService;
+import cn.hustxq.hust.utils.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +47,27 @@ public class EmployController {
         return map;
     }
 
+    //处理文件上传
+    @RequestMapping(value="/testuploadimg", method = RequestMethod.POST)
+    public Map testuploadimg(@RequestParam("file") MultipartFile file,
+                             HttpServletRequest request){
+        String contentType = file.getContentType();
+        String fileName = file.getOriginalFilename();
+        System.out.println("fileName-->" + fileName);
+        System.out.println("getContentType-->" + contentType);
+        String filePath = request.getSession().getServletContext().getRealPath("imgupload/");
+        System.out.println(filePath);
+        try {
+            FileUtils.uploadFile(file.getBytes(), filePath, fileName);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        //返回json
+//        return "uploadimg success";
+        Map map = new HashMap();
+        map.put("msg","success");
+        return map;
+    }
     @RequestMapping("/employee")
     public Map employee(HttpServletRequest request){
         String name = request.getParameter("name");

@@ -12,6 +12,9 @@
     <link rel="stylesheet" th:href="@{/lib/weui.min.css}">
     <link rel="stylesheet" th:href="@{/css/jquery-weui.min.css}">
     <link rel="stylesheet" th:href="@{/css/demos.css}">
+    <style>
+        #go_top{position:fixed; LEFT: 85%;bottom:50px;}
+    </style>
 </head>
 <body ontouchstart>
 <div class="weui-btn-area">
@@ -36,10 +39,53 @@
 <div class="weui-cells weui-cells_form">
     <div class="weui-cell">
         <div class="weui-cell__bd">
-            <textarea id="note" class="weui-textarea" placeholder="请输入职责、待遇等" rows="3"></textarea>
-            <div class="weui-textarea-counter"><span>0</span>/200</div>
+            <textarea id="note" class="weui-textarea" placeholder="请输入职责、待遇等" rows="10"></textarea>
+            <div id="note_count" class="weui-textarea-counter"><span>0</span></div>
         </div>
     </div>
+</div>
+<div class="weui-gallery" id="gallery">
+    <span class="weui-gallery__img" id="galleryImg"></span>
+    <div class="weui-gallery__opr">
+        <a href="javascript:" rel="external nofollow" class="weui-gallery__del">
+            <i class="weui-icon-delete weui-icon_gallery-delete"></i>
+        </a>
+    </div>
+</div>
+
+<div class="weui-cells weui-cells_form">
+    <div class="weui-cell">
+        <div class="weui-cell__bd">
+            <div class="weui-uploader">
+                <div class="weui-uploader__hd">
+                    <p class="weui-uploader__title">图片</p>
+                    <div id="pic_count" class="weui-uploader__info">0</div>
+                </div>
+                <div class="weui-uploader__bd">
+                    <ul class="weui-uploader__files" id="uploaderFiles">
+                    </ul>
+                    <div class="weui-uploader__input-box">
+                        <input id="uploaderInput" class="weui-uploader__input" type="file" accept="image/*" multiple="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content-padded">
+    <div id="list" class="weui-cells">
+    </div>
+    <div id="loadmore" class="weui-loadmore">
+        <i class="weui-loading"></i>
+        <span class="weui-loadmore__tips">正在加载</span>
+    </div>
+    <div id="loadend" class="weui-loadmore">
+        <span class="weui-loadmore__tips">全部加载完成</span>
+    </div>
+</div>
+<div id="go_top">
+    <img th:src="@{/img/top.gif}" alt="回到顶部图片">
+    <!--<p>top</p>-->
 </div>
 <script th:src="@{/lib/jquery-2.1.4.js}"></script>
 <script th:src="@{/lib/fastclick.js}"></script>
@@ -47,6 +93,50 @@
 <script>
     $(function () {
         FastClick.attach(document.body);
+        var page = 0;
+        //检测屏幕高度
+        var height=$(window).height();
+//        是否加载
+        var loadlist = true;
+        $('#go_top').hide();
+        $('#loadend').hide();
+        $(window).scroll(function () {
+//            console.log('scrolling..')
+            var scrollTop = $(this).scrollTop();//滚动条距离顶部的高度
+            var scrollHeight = $(document).height();//当前页面的总高度
+            var clientHeight = $(this).height();//当前可视页面高度
+            if (scrollTop>50){
+                $("#go_top").fadeIn(500);
+            }else{
+                $("#go_top").fadeOut(500);
+            }
+            if (scrollTop + clientHeight >= scrollHeight && loadlist) {
+                console.log('下拉',page)
+                var mb = '';
+                for (var i=0; i<10; i++){
+                    var index = i + page * 10;
+                    var tmp = {id:index,name:'row'+index,pos:index};
+                    mb += '<a class="weui-cell weui-cell_access" href="javascript:showNote(' + tmp.id + ');"><div class="weui-cell__bd"><p>' + tmp.name + '</p></div><div class="weui-cell__ft">' + tmp.pos + '</div></a>';
+                }
+                console.log(page,1)
+                setTimeout(function () {
+                    console.log(page,2)
+                    if (page == 2){
+                        $('#loadmore').hide()
+                        $('#loadend').show()
+                        loadlist = false;
+                    }
+                    $('#list').append(mb);
+                },1000);
+                page++;
+            }else if(scrollTop<=0){
+                console.log('上拉')
+            }
+        });
+        $("#go_top").click(function(){
+            $('body,html').animate({scrollTop:0},300);
+            return false;
+        });
 //        进入时定位到name可输入
         $('#name').focus();
         $('#submit_btn').on('click', function () {
@@ -85,6 +175,75 @@
 
             }
         })
+//      统计textarea实时输入的个数
+        /*$('#note').on('keydown',function () {
+         console.log("keydown")
+         $('#note_count').html($.trim($('#note').val().length))
+         })*/
+        $('#note').on('keyup', function () {
+            console.log("keyup")
+            $('#note_count').html($.trim($('#note').val().length))
+        })
+        var pic_count = 0;
+        var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+                $gallery = $("#gallery"),
+                $galleryImg = $("#galleryImg"),
+                $uploaderInput = $("#uploaderInput"),
+                $uploaderFiles = $("#uploaderFiles");
+        $uploaderInput.on("change", function (e) {
+            var src, url = window.URL || window.webkitURL || window.mozURL,
+                    files = e.target.files;
+            console.log(files)
+            for (var i = 0, len = files.length; i < len; ++i) {
+                var file = files[i];
+                if (url) {
+                    src = url.createObjectURL(file);
+                } else {
+                    src = e.target.result;
+                }
+
+//              上传文件至服务器
+                var myform = new FormData();
+                myform.append('file', file);
+                $.ajax({
+                    type: "POST",
+                    url: "/testuploadimg",
+                    //contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                    contentType: false,
+                    processData: false,
+                    data: myform,
+                    success: function (data) {
+                        console.log(data)
+                        if (data.msg == 'success') {
+                            $uploaderFiles.append($(tmpl.replace('#url#', src)));
+                            pic_count++;
+                            console.log("pic_count", pic_count)
+                            $('#pic_count').html(pic_count);
+                        }
+                    },
+                    error: function (data) {
+                        alert("fail");
+                    }
+                })
+            }
+        });
+        var index; //第几张图片
+        $uploaderFiles.on("click", "li", function () {
+            index = $(this).index();
+            $galleryImg.attr("style", this.getAttribute("style"));
+            $gallery.fadeIn(100);
+        });
+        $gallery.on("click", function () {
+            $gallery.fadeOut(100);
+        });
+        //删除图片
+        $(".weui-gallery__del").click(function () {
+            console.log('删除');
+            pic_count--;
+            console.log("pic_count", pic_count)
+            $('#pic_count').html(pic_count);
+            $uploaderFiles.find("li").eq(index).remove();
+        });
     });
     function myTrim(s) {
         return s.replace(/^\s+|\s+$/gm, '');
