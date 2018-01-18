@@ -8,11 +8,16 @@
         <result column="note" property="note" />
         <result column="time" property="time"/>
     </resultMap>
+    <select id="total" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM employ
+    </select>
     <select id="feedlist" resultMap="BaseResultMap">
         SELECT *
         FROM employ
-        ORDER BY TIME DESC
+        ORDER BY TIME DESC limit #{start},#{offset}
     </select>
+
     <select id="freshEmploy" parameterType="java.util.Map" resultMap="BaseResultMap">
         SELECT *
         FROM employ

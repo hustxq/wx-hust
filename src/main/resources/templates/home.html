@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="../lib/weui.min.css" th:href="@{/lib/weui.min.css}">
     <link rel="stylesheet" href="../css/jquery-weui.css" th:href="@{/css/jquery-weui.min.css}">
     <link rel="stylesheet" href="css/demos.css" th:href="@{/css/demos.css}">
+    <style>#page_tips {
+        position: fixed;
+        left: 9em;
+        bottom: 50px;
+    }</style><!--LEFT: 81.6%;-->
 </head>
 <body>
 <div class="weui-tab">
@@ -37,6 +42,7 @@
                 <div id="list" class="weui-cells">
                 </div>
             </div>
+            <!--<div id="page_tips">第<span id="page">0</span>页/共<span id="total">0</span>页</div>-->
         </div>
         <!--<div id="tab2" class="weui-tab__bd-item weui-pull-to-refresh">
             <div class="weui-pull-to-refresh__layer">
@@ -76,7 +82,7 @@
             <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">
                     <div class="weui-cell__bd">
-                        <textarea id="note" class="weui-textarea" placeholder="请输入职责、待遇等" rows="3"></textarea>
+                        <textarea id="note" class="weui-textarea" placeholder="请输入职责、待遇等" rows="10"></textarea>
                         <div class="weui-textarea-counter"><span>0</span>/200</div>
                     </div>
                 </div>
@@ -86,6 +92,10 @@
 </div>
 <script src="../lib/jquery-2.1.4.js" th:src="@{/lib/jquery-2.1.4.js}"></script>
 <script src="../lib/fastclick.js" th:src="@{/lib/fastclick.js}"></script>
+<!--<script th:inline="javascript">
+    var v = [[${v}]];
+    alert(v)
+</script>-->
 <script>
     $(function () {
         FastClick.attach(document.body);

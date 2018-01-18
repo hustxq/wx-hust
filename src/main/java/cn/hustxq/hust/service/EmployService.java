@@ -12,7 +12,8 @@ import java.util.Map;
 
 public interface EmployService {
     int submit(Map map);
-    List<EmployInfo> feedlist();
+    int total();
+    List<EmployInfo> feedlist(Map map);
     List<EmployInfo> freshEmploy(String time);
     String employInfoById(int id);
 }

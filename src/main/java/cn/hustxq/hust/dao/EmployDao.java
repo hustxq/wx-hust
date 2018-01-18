@@ -11,7 +11,9 @@ import java.util.Map;
  */
 public interface EmployDao {
     int submit(Map map);
-    List<EmployInfo> feedlist();
+    int total();
+    List<EmployInfo> feedlist(Map map);
     List<EmployInfo> freshEmploy(Map map);
     EmployInfo employInfoById(int id);
+
 }

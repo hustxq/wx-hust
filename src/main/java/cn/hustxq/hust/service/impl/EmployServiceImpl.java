@@ -25,8 +25,13 @@ public class EmployServiceImpl implements EmployService {
     }
 
     @Override
-    public List<EmployInfo> feedlist() {
-        return employDao.feedlist();
+    public int total() {
+        return employDao.total();
+    }
+
+    @Override
+    public List<EmployInfo> feedlist(Map map) {
+        return employDao.feedlist(map);
     }
 
     @Override

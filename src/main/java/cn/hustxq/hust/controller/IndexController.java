@@ -19,7 +19,8 @@ import java.util.Map;
 public class IndexController {
     @RequestMapping("")
     public String index(ModelMap map){
-//        map.addAttribute("head",new Header()); // 添加对象
+//        map.addAttribute("v",new Header()); // 添加对象.
+        map.addAttribute("v","testJs");
         return "home";
     }
 

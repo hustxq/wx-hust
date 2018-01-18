@@ -3,6 +3,7 @@ package cn.hustxq.hust.controller;
 import cn.hustxq.hust.bean.EmployInfo;
 import cn.hustxq.hust.service.EmployService;
 import cn.hustxq.hust.utils.FileUtils;
+import com.sun.org.glassfish.gmbal.ParameterNames;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,10 +26,29 @@ public class EmployController {
     EmployService employService;
 
     @RequestMapping("/feedlist")
-    public List<EmployInfo> feedlist(){
+    public Map feedlist(@RequestParam(value = "start",required = false,defaultValue = "0") int start){
+        int total = employService.total();
+        int tp=1;
+        int nums = 5;
+        if(total>nums){
+            if (total%nums == 0){
+                tp = total/nums;
+            }else {
+                tp = total / nums + 1;
+            }
+        }
+//        System.out.println("total:"+total);
         Map<String,Object> map = new HashMap<>();
-        List<EmployInfo> list = employService.feedlist();
-        return list;
+        map.put("start",start*nums);
+        map.put("offset",nums);
+        List<EmployInfo> list = employService.feedlist(map);
+        /*for(EmployInfo info:list){
+            System.out.println(info);
+        }*/
+        map = new HashMap<>();
+        map.put("total",tp);
+        map.put("res",list);
+        return map;
     }
 
     @RequestMapping("/fresh-employ")
